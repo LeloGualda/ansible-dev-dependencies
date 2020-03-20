@@ -1,0 +1,28 @@
+- name: add key 
+  shell: 'wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add'
+  become: yes
+
+- name: Run the mongod service start
+  shell: 'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list'
+  become: yes
+
+- name: install mongo
+  become: yes
+  apt:
+    update_cache: true
+    state: fixed
+    pkg:
+      - gnupg
+      - mongodb-org
+
+- name: apt update cache
+  become: yes
+  apt:
+    update_cache: true  
+
+- name: update sytemctl
+  shell: '
+    sudo systemctl daemon-reload
+    sudo systemctl start mongod
+    sudo systemctl status mongod'
+  become: yes

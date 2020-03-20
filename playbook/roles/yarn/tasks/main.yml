@@ -1,0 +1,28 @@
+- name: install nodejs/npm
+  become: yes
+  apt:
+    pkg:
+      - nodejs
+      - npm
+      
+- name: Install yarn - get pubkty yarn.
+  shell: 'curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list'
+  become: yes
+
+- name: Install yarn - update
+  become: yes
+  apt: 
+    update_cache: false 
+
+- name: Install yarn - install command
+  become: yes
+  apt: 
+    pkg: 
+      - yarn
+
+- name: nvm
+  shell: >
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  args:
+    creates: "~/.nvm/nvm.sh"
